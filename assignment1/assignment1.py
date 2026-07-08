@@ -1,95 +1,103 @@
 # Task 1
 def hello():
-    print("Hello!")
+    return "Hello!"
 
 print("Output of task 1")    
-hello()
+print(hello())
 
 # Task 2
 def greet(name):
-    print(f"Hello, {name}!")
+    return f"Hello, {name}!"
     
 print("\nOutput of task 2")
-greet("Roopa")
+print(greet("Roopa"))
 
 # Task 3
 def calc(num1, num2, operation ="multiply"):
+    result = None
     try:
-        if operation == "addition":
+        if operation == "add":
             result = num1 + num2 #adding the numbers
-        elif operation == "subtraction":
+        elif operation == "subtract":
             result = num1 - num2 #subtracting numbers
         elif operation == "multiply":
             result = num1 * num2 
-        elif operation == "division":
+        elif operation == "divide":
             result = num1 / num2
         elif operation == "modulo":
             result = num1 % num2
-        elif operation == "int_dividision":
+        elif operation == "int_divide":
             result = num1 // num2
         elif operation == "power":
             result = num1 ** num2
     except ZeroDivisionError:
-        print("Error: You can't divide by 0")
+        return ("Error: You can't divide by 0")
     except Exception as e:
-        print(f"Error: You can't {operation} those values!")
+        return (f"Error: You can't {operation} those values!")
     else:
-        print(f"The {operation} of {num1} & {num2} is: {result}")
+        return (f"The {operation} of {num1} & {num2} is: {result}")
 
 print("\nOutput of task 3")            
-calc(2,"test", "division")
+print(calc(2,4, "divide"))
 
 # Task 4
 def data_type_conversion(value, datatype):
     try:
         result = datatype(value)
     except Exception as e:
-        print(f"You can't convert {value} into a {datatype}")
+        return (f"You can't convert {value} into a {datatype}")
     else:
-        print(f"The {type(value)} {value} converted to {datatype} is: {result}")
+        return (f"The {type(value)} {value} converted to {datatype} is: {result}")
 
 print("\nOutput of task 4")
-data_type_conversion(67, str)
+print(data_type_conversion(67, str))
 
 #Task 5
 def grade(*args):
+    grade_letter = None
     try:
-        result = sum(args)
+        result = sum(args)/len(args)
         if result >= 90:
-            print("The grade is: A")
+            grade_letter = "A"
         elif result >= 80 and result <= 89:
-            print("The grade is: B")
+           grade_letter = "B"
         elif result >= 70 and result <= 79:
-            print("The grade is: C")
+            grade_letter = "C"
         elif result >= 60 and result <= 69:
-            print("The grade is: D")
+            grade_letter = "D"
         elif result < 60:
-            print("The grade is: F")
+            grade_letter = "F"
     except Exception as e:
-        print("Error: Invalid data was provided.")
+        return ("Error: Invalid data was provided.")
+    
+    return grade_letter
 
 print("\nOutput of task 5")
-grade(10,24,25,18)
+print(grade(90,67,88,79))
 
 # Task 6
 def repeat(string, count):
+    repeat_string = []
     for i in range(count):
-        print(string)
+        repeat_string.append(string)
+    return "\n".join(repeat_string)
 
 print("\nOutput of task 6")        
-repeat("Python",4)
+print(repeat("Python",4))
 
 # Task 7
 def student_scores(position, **kwargs):
     max_val = max(kwargs, key=kwargs.get)
-    min_val = min(kwargs, key=kwargs.get)
+    num_values = [v for v in kwargs.values() if isinstance(v, (int,float))]
+    avg_val = sum(num_values) / len(num_values)
+    
     if position == "best":
-        print(max_val)
+        return max_val
     elif position == "mean":
-        print(min_val)
+        return avg_val
 
 print("\nOutput of task 7")
-student_scores("mean",Roopa=80, Dai=78)
+print(student_scores("mean",Roopa=80, Dai=78, Bhu=85))
 
 # Task 8
 def titleize(text):
