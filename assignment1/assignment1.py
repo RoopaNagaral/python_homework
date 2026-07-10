@@ -35,7 +35,7 @@ def calc(num1, num2, operation ="multiply"):
     except Exception as e:
         return (f"You can't {operation} those values!")
     else:
-        return (f"{result}")
+        return result
 
 print("\nOutput of task 3")            
 print(calc(2,4, "divide"))
@@ -47,7 +47,7 @@ def data_type_conversion(value, datatype):
     except Exception as e:
         return (f"You can't convert {value} into a {datatype}.")
     else:
-        return (f"{result}")
+        return result
 
 print("\nOutput of task 4")
 print(data_type_conversion(67, str))
@@ -77,9 +77,9 @@ print(grade(90,67,88,79))
 
 # Task 6
 def repeat(string, count):
-    repeat_string = []
+    repeat_string = ""
     for i in range(count):
-        repeat_string.append(string)
+        repeat_string += " " + string 
     return repeat_string
 
 print("\nOutput of task 6")        
@@ -88,17 +88,16 @@ print(repeat("Python",4))
 # Task 7
 def student_scores(position, **kwargs):
     max_key = max(kwargs, key=kwargs.get)
-    max_val = kwargs[max_key]
     num_values = [v for v in kwargs.values() if isinstance(v, (int,float))]
     avg_val = sum(num_values) / len(num_values)
     
     if position == "best":
-        return (f"{max_key}: {max_val}")
+        return max_key
     elif position == "mean":
-        return avg_val
+        return int(avg_val)
 
 print("\nOutput of task 7")
-print(student_scores("best",Roopa=80, Dai=78, Bhu=85))
+print(student_scores("mean",Roopa=80, Dai=78, Bhu=85))
 
 # Task 8
 def titleize(text):
@@ -151,13 +150,17 @@ def pig_latin(sentence):
             consonants = ""
             rest = word
 
-            while rest[0] not in vowels:
-                consonants += rest[0]
-                rest = rest[1:]
-
-            result.append(rest + consonants + "ay")
-
+            for i, letter in enumerate(rest):
+               if rest[0] not in vowels:
+                   consonants += rest[0] 
+                   rest = rest[1:]
+                   
+               elif letter in vowels:
+                   if rest[i-1:i+1] == "qu":
+                       result.append(rest[i+1:] + rest[:i+1] + "ay")
+            result.append(rest+ consonants+ "ay")
+            
     return " ".join(result)
 
 print("\nOutput of task 10")
-print(pig_latin("testing the pig latin game"))
+print(pig_latin("testing the pig latin game in the square"))
