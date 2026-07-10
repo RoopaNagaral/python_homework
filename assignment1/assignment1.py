@@ -31,11 +31,11 @@ def calc(num1, num2, operation ="multiply"):
         elif operation == "power":
             result = num1 ** num2
     except ZeroDivisionError:
-        return ("Error: You can't divide by 0")
+        return ("You can't divide by 0!")
     except Exception as e:
-        return (f"Error: You can't {operation} those values!")
+        return (f"You can't {operation} those values!")
     else:
-        return (f"The {operation} of {num1} & {num2} is: {result}")
+        return (f"{result}")
 
 print("\nOutput of task 3")            
 print(calc(2,4, "divide"))
@@ -45,9 +45,9 @@ def data_type_conversion(value, datatype):
     try:
         result = datatype(value)
     except Exception as e:
-        return (f"You can't convert {value} into a {datatype}")
+        return (f"You can't convert {value} into a {datatype}.")
     else:
-        return (f"The {type(value)} {value} converted to {datatype} is: {result}")
+        return (f"{result}")
 
 print("\nOutput of task 4")
 print(data_type_conversion(67, str))
@@ -68,7 +68,7 @@ def grade(*args):
         elif result < 60:
             grade_letter = "F"
     except Exception as e:
-        return ("Error: Invalid data was provided.")
+        return ("Invalid data was provided.")
     
     return grade_letter
 
@@ -80,24 +80,25 @@ def repeat(string, count):
     repeat_string = []
     for i in range(count):
         repeat_string.append(string)
-    return "\n".join(repeat_string)
+    return repeat_string
 
 print("\nOutput of task 6")        
 print(repeat("Python",4))
 
 # Task 7
 def student_scores(position, **kwargs):
-    max_val = max(kwargs, key=kwargs.get)
+    max_key = max(kwargs, key=kwargs.get)
+    max_val = kwargs[max_key]
     num_values = [v for v in kwargs.values() if isinstance(v, (int,float))]
     avg_val = sum(num_values) / len(num_values)
     
     if position == "best":
-        return max_val
+        return (f"{max_key}: {max_val}")
     elif position == "mean":
         return avg_val
 
 print("\nOutput of task 7")
-print(student_scores("mean",Roopa=80, Dai=78, Bhu=85))
+print(student_scores("best",Roopa=80, Dai=78, Bhu=85))
 
 # Task 8
 def titleize(text):
