@@ -13,9 +13,11 @@ print("\nOutput of task 2")
 print(greet("Roopa"))
 
 # Task 3
-def calc(num1, num2, operation ="multiply"):
+def calc(value1, value2, operation ="multiply"):
     result = None
     try:
+        num1 = float(value1)
+        num2 = float(value2)
         if operation == "add":
             result = num1 + num2 #adding the numbers
         elif operation == "subtract":
@@ -32,27 +34,30 @@ def calc(num1, num2, operation ="multiply"):
             result = num1 ** num2
     except ZeroDivisionError:
         return ("You can't divide by 0!")
-    except Exception as e:
+    except ValueError:
         return ("You can't multiply those values!")
     else:
         return result
 
 print("\nOutput of task 3")            
-print(calc(2,4, "divide"))
+print(calc(2,0, "divide"))
+print(calc(2,4, "add"))
+print(calc(2,"test", "multiply"))
+print(calc(8,0, "int_divide"))
 
 # Task 4
-def data_type_conversion(value, type):
+def data_type_conversion(value, datatype):
     try:
         result = None
-        if type == "int":
+        if datatype == "int":
             result = int(value)
-        elif type == "float":
+        elif datatype == "float":
             result = float(value)
-        elif type == "str":
+        elif datatype == "str":
             result = str(value)
         
     except Exception as e:
-        return (f"You can't convert {value} into a {type}.")
+        return (f"You can't convert {value} into a {datatype}.")
     else:
         return result
 
@@ -66,11 +71,11 @@ def grade(*args):
         result = sum(args)/len(args)
         if result >= 90:
             grade_letter = "A"
-        elif result >= 80 and result <= 89:
+        elif result >= 80:
            grade_letter = "B"
-        elif result >= 70 and result <= 79:
+        elif result >= 70:
             grade_letter = "C"
-        elif result >= 60 and result <= 69:
+        elif result >= 60:
             grade_letter = "D"
         elif result < 60:
             grade_letter = "F"
@@ -95,18 +100,19 @@ print(repeat("Python",4))
 # Task 7
 def student_scores(position, **kwargs):
     max_key = max(kwargs, key=kwargs.get)
-    num_values = [v for v in kwargs.values() if isinstance(v, (int,float))]
+    num_values = [v for v in kwargs.values()]
     avg_val = sum(num_values) / len(num_values)
-    
+    avg_val = avg_val
     if position == "best":
         return max_key
     elif position == "mean":
-        return avg_val
+        return round(avg_val,2)
     else:
         return ("Invalid position!, Enter 'best' or 'mean'")
 
 print("\nOutput of task 7")
 print(student_scores("best",Roopa=80, Jeniffer=78, Nancy=85))
+print(student_scores("mean",Roopa=80, Jeniffer=79, Nancy=85))
 
 # Task 8
 def titleize(text):
@@ -146,26 +152,30 @@ print(hangman("alphabet","ab"))
 
 # Task 10
 
-def pig_latin(sentence):
+def pig_latin(word):
     vowels = "aeiou"
-    words = sentence.lower().split()
-    result = []
-    #word = word.lower()
+    word = word.lower()
 
-    for word in words:
-        if word in vowels:
-            result.append(word +"ay")
-            
-        if word.startswith("qu"):
-            result.append(word[2:] + "quay")
+    # Rule 1: Starts with a vowel
+    if word[0] in vowels:
+        return word + "ay"
 
-        for i, letter in enumerate(word):
-            if letter in vowels:
-                if word[i-1:i+1] == "qu":
-                    result.append(word[i+1:] + word[:i+1] + "ay")
-        result.append(word[i:] + word[:i] + "ay")
+    # Rule 3: Special case for 'qu'
+    if word.startswith("qu"):
+        return word[2:] + "quay"
 
-    return " ".join(result)
+    # Rule 2: Starts with consonant(s)
+    for i, letter in enumerate(word):
+        # Handle 'qu' inside consonant cluster
+        if letter in vowels:
+            if word[i-1:i+1] == "qu":
+                return word[i+1:] + word[:i+1] + "ay"
+            return word[i:] + word[:i] + "ay"
+
+    return word
 
 print("\nOutput of task 10")
-print(pig_latin("testing the pig latin game in the square"))
+print(pig_latin("apple"))
+print(pig_latin("square"))
+print(pig_latin("queen"))
+print(pig_latin("student"))
