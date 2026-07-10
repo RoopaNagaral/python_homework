@@ -33,7 +33,7 @@ def calc(num1, num2, operation ="multiply"):
     except ZeroDivisionError:
         return ("You can't divide by 0!")
     except Exception as e:
-        return (f"You can't {operation} those values!")
+        return ("You can't multiply those values!")
     else:
         return result
 
@@ -41,20 +41,27 @@ print("\nOutput of task 3")
 print(calc(2,4, "divide"))
 
 # Task 4
-def data_type_conversion(value, datatype):
+def data_type_conversion(value, type):
     try:
-        result = datatype(value)
+        result = None
+        if type == "int":
+            result = int(value)
+        elif type == "float":
+            result = float(value)
+        elif type == "str":
+            result = str(value)
+        
     except Exception as e:
-        return (f"You can't convert {value} into a {datatype}.")
+        return (f"You can't convert {value} into a {type}.")
     else:
         return result
 
 print("\nOutput of task 4")
-print(data_type_conversion(67, str))
+print(data_type_conversion(55.88, "int"))
 
 #Task 5
 def grade(*args):
-    grade_letter = None
+    grade_letter = ""
     try:
         result = sum(args)/len(args)
         if result >= 90:
@@ -73,13 +80,13 @@ def grade(*args):
     return grade_letter
 
 print("\nOutput of task 5")
-print(grade(90,67,88,79))
+print(grade(90,92,88,95))
 
 # Task 6
 def repeat(string, count):
     repeat_string = ""
     for i in range(count):
-        repeat_string += " " + string 
+        repeat_string += string
     return repeat_string
 
 print("\nOutput of task 6")        
@@ -94,10 +101,12 @@ def student_scores(position, **kwargs):
     if position == "best":
         return max_key
     elif position == "mean":
-        return int(avg_val)
+        return avg_val
+    else:
+        return ("Invalid position!, Enter 'best' or 'mean'")
 
 print("\nOutput of task 7")
-print(student_scores("mean",Roopa=80, Dai=78, Bhu=85))
+print(student_scores("best",Roopa=80, Jeniffer=78, Nancy=85))
 
 # Task 8
 def titleize(text):
@@ -136,30 +145,26 @@ print("\nOutput of task 9")
 print(hangman("alphabet","ab"))
 
 # Task 10
+
 def pig_latin(sentence):
     vowels = "aeiou"
-    words = sentence.split()
+    words = sentence.lower().split()
     result = []
+    #word = word.lower()
 
     for word in words:
-        if word[0] in vowels:
-            result.append(word + "ay")
-        elif word.startswith("qu"):
-            result.append(word[2:] + "quay")
-        else:
-            consonants = ""
-            rest = word
-
-            for i, letter in enumerate(rest):
-               if rest[0] not in vowels:
-                   consonants += rest[0] 
-                   rest = rest[1:]
-                   
-               elif letter in vowels:
-                   if rest[i-1:i+1] == "qu":
-                       result.append(rest[i+1:] + rest[:i+1] + "ay")
-            result.append(rest+ consonants+ "ay")
+        if word in vowels:
+            result.append(word +"ay")
             
+        if word.startswith("qu"):
+            result.append(word[2:] + "quay")
+
+        for i, letter in enumerate(word):
+            if letter in vowels:
+                if word[i-1:i+1] == "qu":
+                    result.append(word[i+1:] + word[:i+1] + "ay")
+        result.append(word[i:] + word[:i] + "ay")
+
     return " ".join(result)
 
 print("\nOutput of task 10")
