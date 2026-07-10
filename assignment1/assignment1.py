@@ -16,8 +16,10 @@ print(greet("Roopa"))
 def calc(value1, value2, operation ="multiply"):
     result = None
     try:
-        num1 = int(value1)
-        num2 = int(value2)
+        num1 = float(value1)
+        num2 = float(value2)
+        int_num1 = int(value1)
+        int_num2 = int(value2)
         if operation == "add":
             result = num1 + num2 #adding the numbers
         elif operation == "subtract":
@@ -29,7 +31,7 @@ def calc(value1, value2, operation ="multiply"):
         elif operation == "modulo":
             result = num1 % num2
         elif operation == "int_divide":
-            result = num1 // num2
+            result = int_num1 // int_num2
         elif operation == "power":
             result = num1 ** num2
     except ZeroDivisionError:
@@ -102,7 +104,7 @@ def student_scores(position, **kwargs):
     max_key = max(kwargs, key=kwargs.get)
     num_values = [v for v in kwargs.values()]
     avg_val = sum(num_values) / len(num_values)
-    avg_val = avg_val
+
     if position == "best":
         return max_key
     elif position == "mean":
@@ -152,51 +154,30 @@ print(hangman("alphabet","ab"))
 
 # Task 10
 
-""" def pig_latin(word):
+def pig_latin(word):
     vowels = "aeiou"
     word = word.lower()
-    
+
+    # Rule 1: Starts with a vowel
     if word[0] in vowels:
         return word + "ay"
-    
+
+    # Rule 3: Special case for 'qu'
     if word.startswith("qu"):
         return word[2:] + "quay"
-    
+
+    # Rule 2: Starts with consonant(s)
     for i, letter in enumerate(word):
+        # Handle 'qu' inside consonant cluster
         if letter in vowels:
             if word[i-1:i+1] == "qu":
                 return word[i+1:] + word[:i+1] + "ay"
             return word[i:] + word[:i] + "ay"
 
-    return word """
-
-def pig_latin(sentence):
-    vowels = "aeiou"
-    words = sentence.split()
-    result = []
-
-    for word in words:
-        if word[0] in vowels:
-            result.append(word + "ay")
-        elif word.startswith("qu"):
-            result.append(word[2:] + "quay")
-        else:
-            consonants = ""
-            rest = word
-
-            for i, letter in enumerate(word):
-               if letter in vowels:
-                   if rest[i-1:i+1] == "qu":
-                       result.append(rest[i+1:] + rest[:i+1] + "ay")
-               elif rest[0] not in vowels:
-                   consonants += rest[0] 
-                   rest = rest[1:]
-            result.append(rest + consonants + "ay")
-            
-    return " ".join(result)
+    return word
 
 print("\nOutput of task 10")
 print(pig_latin("apple"))
 print(pig_latin("square"))
-print(pig_latin("queen is beautiful"))
+print(pig_latin("queen"))
 print(pig_latin("student"))
