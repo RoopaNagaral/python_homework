@@ -13,27 +13,26 @@ print("\nOutput of task 2")
 print(greet("Roopa"))
 
 # Task 3
-def calc(value1, value2, operation ="multiply"):
+def calc(num1, num2, operation ="multiply"):
     result = None
     try:
-        num1 = float(value1)
-        num2 = float(value2)
-        int_num1 = int(value1)
-        int_num2 = int(value2)
-        if operation == "add":
-            result = num1 + num2 #adding the numbers
-        elif operation == "subtract":
-            result = num1 - num2 #subtracting numbers
-        elif operation == "multiply":
-            result = num1 * num2 
-        elif operation == "divide":
-            result = num1 / num2
-        elif operation == "modulo":
-            result = num1 % num2
-        elif operation == "int_divide":
-            result = int_num1 // int_num2
-        elif operation == "power":
-            result = num1 ** num2
+        if type(num1) and type(num2) == (int or float):
+            if operation == "add":
+                result = num1 + num2 #adding the numbers
+            elif operation == "subtract":
+                result = num1 - num2 #subtracting numbers
+            elif operation == "multiply":
+                result = num1 * num2 
+            elif operation == "divide":
+                result = num1 / num2
+            elif operation == "modulo":
+                result = num1 % num2
+            elif operation == "int_divide":
+                result = num1 // num2
+            elif operation == "power":
+                result = num1 ** num2
+        else:
+            raise ValueError("You can't multiply those values!")
     except ZeroDivisionError:
         return ("You can't divide by 0!")
     except ValueError:
@@ -43,14 +42,20 @@ def calc(value1, value2, operation ="multiply"):
 
 print("\nOutput of task 3")            
 print(calc(2,0, "divide"))
+print(calc(34,6, "divide"))
 print(calc(2,4, "add"))
 print(calc(2,"test", "multiply"))
+print(calc(15,6, "multiply"))
 print(calc(8,0, "int_divide"))
+print(calc(8,4, "int_divide"))
+print(calc(6,3, "power"))
+print(calc(12,5, "subtract"))
 
 # Task 4
-def data_type_conversion(value, datatype):
+def data_type_conversion(value, type):
     try:
         result = None
+        datatype = type
         if datatype == "int":
             result = int(value)
         elif datatype == "float":
@@ -58,13 +63,16 @@ def data_type_conversion(value, datatype):
         elif datatype == "str":
             result = str(value)
         
-    except Exception as e:
-        return (f"You can't convert {value} into a {datatype}.")
+    except ValueError:
+        return (f"You can't convert {value} into a {type}.")
     else:
         return result
 
 print("\nOutput of task 4")
 print(data_type_conversion(55.88, "int"))
+print(data_type_conversion(73, "float"))
+print(data_type_conversion("nonsense", "float"))
+print(data_type_conversion(55.88, "str"))
 
 #Task 5
 def grade(*args):
@@ -100,17 +108,15 @@ print("\nOutput of task 6")
 print(repeat("Python",4))
 
 # Task 7
-def student_scores(position, **kwargs):
-    max_key = max(kwargs, key=kwargs.get)
-    num_values = [v for v in kwargs.values()]
+def student_scores(mode, **scores):
+    max_key = max(scores, key=scores.get)
+    num_values = [v for v in scores.values()]
     avg_val = sum(num_values) / len(num_values)
-
-    if position == "best":
+    
+    if mode == "best":
         return max_key
-    elif position == "mean":
+    elif mode == "mean":
         return avg_val
-    else:
-        return ("Invalid position!, Enter 'best' or 'mean'")
 
 print("\nOutput of task 7")
 print(student_scores("best",Roopa=80, Jeniffer=78, Nancy=85))
@@ -154,30 +160,33 @@ print(hangman("alphabet","ab"))
 
 # Task 10
 
-def pig_latin(word):
+def pig_latin(text):
     vowels = "aeiou"
-    word = word.lower()
+    words = text.split()
+    result = []
 
-    # Rule 1: Starts with a vowel
-    if word[0] in vowels:
-        return word + "ay"
+    for word in words:
+        if word[0] in vowels:
+            result.append(word + "ay")
+            continue
+        
+        if word.startswith("qu"):
+            result.append(word[2:] + "quay")
+            continue
 
-    # Rule 3: Special case for 'qu'
-    if word.startswith("qu"):
-        return word[2:] + "quay"
+        i = 0
+        while i < len(word) and word[i] not in vowels:
+            if word[i:i+2] == "qu":
+                i += 2
+            else:
+                i += 1
 
-    # Rule 2: Starts with consonant(s)
-    for i, letter in enumerate(word):
-        # Handle 'qu' inside consonant cluster
-        if letter in vowels:
-            if word[i-1:i+1] == "qu":
-                return word[i+1:] + word[:i+1] + "ay"
-            return word[i:] + word[:i] + "ay"
+        result.append(word[i:] + word[:i] + "ay")
 
-    return word
+    return " ".join(result)
 
 print("\nOutput of task 10")
 print(pig_latin("apple"))
-print(pig_latin("square"))
+print(pig_latin("the quick brown fox"))
 print(pig_latin("queen"))
-print(pig_latin("student"))
+print(pig_latin("square"))
