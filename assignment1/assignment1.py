@@ -16,7 +16,7 @@ print(greet("Roopa"))
 def calc(num1, num2, operation ="multiply"):
     result = None
     try:
-        if type(num1) and type(num2) == (int or float):
+        if type(num1) == (int or float) and type(num2) == (int or float):
             if operation == "add":
                 result = num1 + num2 #adding the numbers
             elif operation == "subtract":
@@ -108,7 +108,7 @@ print("\nOutput of task 6")
 print(repeat("Python",4))
 
 # Task 7
-def student_scores(mode, **scores):
+def student_scores(mode="best", **scores):
     max_key = max(scores, key=scores.get)
     num_values = [v for v in scores.values()]
     avg_val = sum(num_values) / len(num_values)
