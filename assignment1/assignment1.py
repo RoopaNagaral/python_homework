@@ -16,7 +16,7 @@ print(greet("Roopa"))
 def calc(num1, num2, operation ="multiply"):
     result = None
     try:
-        if type(num1) == (int or float) and type(num2) == (int or float):
+        if isinstance(num1,(int,float)) and isinstance(num2,(int,float)):
             if operation == "add":
                 result = num1 + num2 #adding the numbers
             elif operation == "subtract":
@@ -52,10 +52,9 @@ print(calc(6,3, "power"))
 print(calc(12,5, "subtract"))
 
 # Task 4
-def data_type_conversion(value, type):
+def data_type_conversion(value, datatype):
     try:
         result = None
-        datatype = type
         if datatype == "int":
             result = int(value)
         elif datatype == "float":
@@ -64,7 +63,7 @@ def data_type_conversion(value, type):
             result = str(value)
         
     except ValueError:
-        return (f"You can't convert {value} into a {type}.")
+        return (f"You can't convert {value} into a {datatype}.")
     else:
         return result
 
@@ -109,14 +108,17 @@ print(repeat("Python",4))
 
 # Task 7
 def student_scores(mode="best", **scores):
-    max_key = max(scores, key=scores.get)
-    num_values = [v for v in scores.values()]
-    avg_val = sum(num_values) / len(num_values)
-    
-    if mode == "best":
-        return max_key
-    elif mode == "mean":
-        return avg_val
+    if not len(scores) == 0:
+        max_key = max(scores, key=scores.get)
+        num_values = [v for v in scores.values()]
+        avg_val = sum(num_values) / len(num_values)
+        
+        if mode == "best":
+            return max_key
+        elif mode == "mean":
+            return avg_val
+    else:
+        return ("Scores are empty, Enter the scores")
 
 print("\nOutput of task 7")
 print(student_scores("best",Roopa=80, Jeniffer=78, Nancy=85))
