@@ -12,7 +12,7 @@ def read_employees():
         with open("../csv/employees.csv","r") as file:
             reader = csv.reader(file)
             fields = next(reader)
-            rows = [list(row) for row in reader]
+            rows = [row for row in reader]
                 
     except Exception as e:
         trace_back = traceback.extract_tb(e.__traceback__)
