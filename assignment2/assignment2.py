@@ -9,7 +9,7 @@ from datetime import datetime
 # Task 2
 def read_employees():
     try:
-        with open("csv/employees.csv","r") as file:
+        with open("../csv/employees.csv","r") as file:
             reader = csv.reader(file)
             fields = next(reader)
             rows = [list(row) for row in reader]
@@ -25,7 +25,6 @@ def read_employees():
             print(f"Exception message: {message}")
         print(f"Stack trace: {stack_trace}")
     else:
-        file.close()
         return {"fields": fields, "rows": rows}
     
 employees = read_employees()
@@ -43,23 +42,19 @@ print(employee_id_column)
 # Task 4
 def first_name(row_index):
     column_num = column_index("first_name")
-    col_key = list(employees.keys())[column_num]
-    fname = employees[col_key][row_index]
-    return fname[1]
+    fst_name = employees["rows"][row_index][column_num]
+    return fst_name
     
 print("\n Output of Task 4:")
 print("First Name:", first_name(4))
 
 # Task 5
 def employee_find(employee_id):
-    
-    for row in employees:
-        def employee_match(row):
+    def employee_match(row):
             return int(row[employee_id_column]) == employee_id
-        
-        matches = list(filter(employee_match, employees["rows"]))
+    
+    matches = list(filter(employee_match, employees["rows"]))
     return matches
-
 print("\n Output of Task 5:")
 print(employee_find(2))
 
@@ -73,11 +68,12 @@ print(employee_find_2(5))
 
 # Task 7
 def sort_by_last_name():
-    column_id = column_index("last_name")
-    emp_list = list(employees["rows"])
-    sorted_list = sorted(emp_list, key= lambda row : row[column_id])
+    last_name_index = column_index("last_name")
+    #emp_list = list(employees["rows"])
+    #sorted_list = sorted(emp_list, key= lambda row : row[column_id])
+    employees["rows"].sort(key=lambda row : row[last_name_index])
     
-    return sorted_list
+    return employees["rows"]
 
 print("\n Output of Task 7:")
 print(sort_by_last_name())
@@ -141,12 +137,11 @@ def read_minutes_file(path):
             print(f"Exception message: {message}")
         print(f"Stack trace: {stack_trace}")
     else:
-        file.close()
         return {"fields": fields, "rows":rows}
     
 def read_minutes():
-    v1 = read_minutes_file("csv/minutes1.csv")
-    v2 = read_minutes_file("csv/minutes2.csv")
+    v1 = read_minutes_file("../csv/minutes1.csv")
+    v2 = read_minutes_file("../csv/minutes2.csv")
     return v1, v2
 
 minutes1, minutes2 = read_minutes()
@@ -179,16 +174,16 @@ print(minutes_list)
 # Task 15
 def write_sorted_list():
     sorted_list = sorted(minutes_list, key=lambda x : x[1])
-    converted_list = list(map(lambda x: (x[0], datetime.strftime(x[1], "%B %d, %Y")), sorted_list))
+    converted = [(name, dt.strftime("%B %d, %Y")) for name, dt in sorted_list]
     
-    with open("assignment2/minutes.csv", "w", newline="") as file:
+    with open("./minutes.csv", "w", newline="") as file:
         writer = csv.writer(file)
         
         writer.writerow(minutes1["fields"])
         
-        for row in converted_list:
+        for row in converted:
             writer.writerow(row)
-    return converted_list
+    return converted
 
 minutes_sorted  = write_sorted_list()
 print("\n Output of Task 14:")   
