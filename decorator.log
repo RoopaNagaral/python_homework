@@ -1,0 +1,14 @@
+this string would be logged
+this string would be logged
+function: greet
+positional parameters: none
+keyword parameters: none
+return: None
+function: chek_args
+positional parameters: [10, 15, 20, 'orange']
+keyword parameters: none
+return: True
+function: kw_retuen
+positional parameters: none
+keyword parameters: {'a': 25, 'b': 'Hello', 'c': True}
+return: <function logger_decorator at 0x000002B282E77530>
