@@ -44,5 +44,3 @@ def kw_retuen(**kwargs):
 greet()
 chek_args(10,15,20,"orange")
 kw_retuen(a=25, b="Hello", c=True)
-    
-# Task 2
