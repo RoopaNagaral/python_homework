@@ -1,8 +1,7 @@
 import csv
-import traceback
 
 # Task 3
-with open("csv/employees.csv","r") as file:
+with open("../csv/employees.csv","r") as file:
     reader = csv.reader(file)
     employees = list(reader)
 

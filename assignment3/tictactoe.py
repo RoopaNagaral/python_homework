@@ -87,11 +87,11 @@ class Board():
 if __name__ == "__main__":
     board = Board()
     print("Welcome to TicTacToe!")
-    print(board)
 
     while True:
         game_over, message = board.whats_next()
         print(message)
+        print(board)
 
         if game_over:
             break
@@ -101,8 +101,5 @@ if __name__ == "__main__":
             board.move(move)
         except TictactoeException as e:
             print(e.message)
-            continue
-
-        print(board)
 
 # --- Task Completed ---

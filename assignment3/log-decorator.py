@@ -10,8 +10,6 @@ logger.addHandler(logging.FileHandler("./decorator.log","a"))
 def logger_decorator(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        logger.info(f"function: {func.__name__}")
-        
         pos_params = list(args) if args else "none"
         kw_params = kwargs if kwargs else "none"
         
@@ -28,7 +26,6 @@ def logger_decorator(func):
         return result
     return wrapper
 
-print("Output of Task 1:")
 @logger_decorator
 def no_param_function():
     print("Hello! World")

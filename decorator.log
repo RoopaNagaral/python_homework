@@ -42,3 +42,34 @@ positional parameters: none
 keyword parameters: {'a': 1, 'b': 'two', 'c': True}
 return: <function logger_decorator at 0x0000029346D87480>
 ----------------------------------------
+function: no_param_function
+function: no_param_function
+positional parameters: none
+keyword parameters: none
+return: None
+----------------------------------------
+function: positional_only_function
+function: positional_only_function
+positional parameters: [10, 20, 'apple', 3.14]
+keyword parameters: none
+return: True
+----------------------------------------
+function: keyword_only_function
+function: keyword_only_function
+positional parameters: none
+keyword parameters: {'a': 1, 'b': 'two', 'c': True}
+function: no_param_function
+positional parameters: none
+keyword parameters: none
+return: None
+----------------------------------------
+function: positional_only_function
+positional parameters: [10, 20, 'apple', 3.14]
+keyword parameters: none
+return: True
+----------------------------------------
+function: keyword_only_function
+positional parameters: none
+keyword parameters: {'a': 1, 'b': 'two', 'c': True}
+return: <function logger_decorator at 0x0000028878697480>
+----------------------------------------
