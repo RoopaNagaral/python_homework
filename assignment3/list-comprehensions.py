@@ -9,6 +9,6 @@ with open("../csv/employees.csv","r") as file:
     print(names)
 
     names_with_e = [name for name in names if "e" in name.lower()]
-    print("\n", names_with_e)
+    print(names_with_e)
 
     # --- Task Completed ---

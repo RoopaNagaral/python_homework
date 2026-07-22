@@ -1,78 +1,3 @@
-this string would be logged
-this string would be logged
-function: greet
-positional parameters: none
-keyword parameters: none
-return: None
-function: chek_args
-positional parameters: [10, 15, 20, 'orange']
-keyword parameters: none
-return: True
-function: kw_retuen
-positional parameters: none
-keyword parameters: {'a': 25, 'b': 'Hello', 'c': True}
-return: <function logger_decorator at 0x000002B282E77530>
-function: greet
-positional parameters: none
-keyword parameters: none
-return: None
-function: chek_args
-positional parameters: [10, 15, 20, 'orange']
-keyword parameters: none
-return: True
-function: kw_retuen
-positional parameters: none
-keyword parameters: {'a': 25, 'b': 'Hello', 'c': True}
-return: <function logger_decorator at 0x000001A5CB1C7690>
-function: no_param_function
-function: no_param_function
-positional parameters: none
-keyword parameters: none
-return: None
-----------------------------------------
-function: positional_only_function
-function: positional_only_function
-positional parameters: [10, 20, 'apple', 3.14]
-keyword parameters: none
-return: True
-----------------------------------------
-function: keyword_only_function
-function: keyword_only_function
-positional parameters: none
-keyword parameters: {'a': 1, 'b': 'two', 'c': True}
-return: <function logger_decorator at 0x0000029346D87480>
-----------------------------------------
-function: no_param_function
-function: no_param_function
-positional parameters: none
-keyword parameters: none
-return: None
-----------------------------------------
-function: positional_only_function
-function: positional_only_function
-positional parameters: [10, 20, 'apple', 3.14]
-keyword parameters: none
-return: True
-----------------------------------------
-function: keyword_only_function
-function: keyword_only_function
-positional parameters: none
-keyword parameters: {'a': 1, 'b': 'two', 'c': True}
-function: no_param_function
-positional parameters: none
-keyword parameters: none
-return: None
-----------------------------------------
-function: positional_only_function
-positional parameters: [10, 20, 'apple', 3.14]
-keyword parameters: none
-return: True
-----------------------------------------
-function: keyword_only_function
-positional parameters: none
-keyword parameters: {'a': 1, 'b': 'two', 'c': True}
-return: <function logger_decorator at 0x0000028878697480>
-----------------------------------------
 function: no_param_function
 positional parameters: none
 keyword parameters: none
@@ -84,4 +9,4 @@ return: True
 function: keyword_only_function
 positional parameters: none
 keyword parameters: {'a': 1, 'b': 'two', 'c': True}
-return: <function logger_decorator at 0x000001E475F47480>
+return: <function logger_decorator at 0x000001CF0D377480>

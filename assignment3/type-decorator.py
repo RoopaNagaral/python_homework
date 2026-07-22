@@ -15,7 +15,6 @@ def return_int():
 def return_string():
     return "not a number"
 
-print("Output of Task 2:")
 if __name__ == "__main__":
     y = return_int()
     print(type(y).__name__)   
