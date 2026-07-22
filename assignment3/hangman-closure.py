@@ -31,7 +31,6 @@ if __name__ == "__main__":
         guess = input("Enter a letter: ").strip().lower()
 
         if len(guess) != 1 or not guess.isalpha():
-            print("Please enter a single alphabetic character.")
             continue
 
         done = hangman(guess)
