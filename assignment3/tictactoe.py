@@ -87,19 +87,22 @@ class Board():
 if __name__ == "__main__":
     board = Board()
     print("Welcome to TicTacToe!")
+    print(board)
 
     while True:
         game_over, message = board.whats_next()
         print(message)
-        print(board)
 
         if game_over:
             break
 
-        move = input("Enter your move (e.g., 'upper left', 'center'): ").strip().lower()
+        move = input(f"Enter move for {board.turn} (e.g., 'upper left', 'center'): ").strip().lower()
         try:
             board.move(move)
         except TictactoeException as e:
             print(e.message)
+            continue
+
+        print(board)
 
 # --- Task Completed ---

@@ -21,7 +21,6 @@ def logger_decorator(func):
 
         # Log the actual return value
         logger.log(logging.INFO, f"return: {result!r}")
-        logger.log(logging.INFO, "-" * 40)
         
         return result
     return wrapper
