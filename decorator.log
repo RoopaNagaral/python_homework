@@ -24,3 +24,21 @@ function: kw_retuen
 positional parameters: none
 keyword parameters: {'a': 25, 'b': 'Hello', 'c': True}
 return: <function logger_decorator at 0x000001A5CB1C7690>
+function: no_param_function
+function: no_param_function
+positional parameters: none
+keyword parameters: none
+return: None
+----------------------------------------
+function: positional_only_function
+function: positional_only_function
+positional parameters: [10, 20, 'apple', 3.14]
+keyword parameters: none
+return: True
+----------------------------------------
+function: keyword_only_function
+function: keyword_only_function
+positional parameters: none
+keyword parameters: {'a': 1, 'b': 'two', 'c': True}
+return: <function logger_decorator at 0x0000029346D87480>
+----------------------------------------

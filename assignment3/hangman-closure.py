@@ -1,32 +1,43 @@
-# Task 4
 def make_hangman(secret_word):
-    guesess = []
-    
+    guesses = []
+
     def hangman_closure(letter):
-        guesess.append(letter)
-        
-        displayed = ""
-        for ch in secret_word:
-            if ch in guesess:
-                displayed += ch
+        # Record the guess
+        guesses.append(letter.lower())
+
+        # Build the displayed word with underscores for unguessed letters
+        revealed = ""
+        for ch in secret_word.lower():
+            if ch in guesses:
+                revealed += ch
             else:
-                displayed += "_"
-        
-        print(displayed)
-        
-        return all(ch in guesess for ch in secret_word)
-      
+                revealed += "_"
+
+        print(revealed)
+
+        # Return True only when all letters have been guessed
+        return all(ch in guesses for ch in secret_word.lower())
+
     return hangman_closure
 
-secret_word = input("Enter secret word: ")
-game1 = make_hangman(secret_word)
 
-while True:
-    guess = input("Enter guess letter: ")
-    
-    finished = game1(guess)
-    
-    if finished:
-        print(True)
-        break
-        
+if __name__ == "__main__":
+    secret_word = input("Enter the secret word: ").strip()
+    hangman = make_hangman(secret_word)
+
+    print("Start guessing letters!")
+
+    # Keep prompting until the full word is guessed
+    while True:
+        guess = input("Enter a letter: ").strip().lower()
+
+        if len(guess) != 1 or not guess.isalpha():
+            print("Please enter a single alphabetic character.")
+            continue
+
+        done = hangman(guess)
+        if done:
+            print("You guessed the word!")
+            break
+
+# --- Task Completed ---
