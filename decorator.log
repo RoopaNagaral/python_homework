@@ -1,0 +1,12 @@
+function: no_param_function
+positional parameters: none
+keyword parameters: none
+return: None
+function: positional_only_function
+positional parameters: [10, 20, 'apple', 3.14]
+keyword parameters: none
+return: True
+function: keyword_only_function
+positional parameters: none
+keyword parameters: {'a': 1, 'b': 'two', 'c': True}
+return: <function logger_decorator at 0x000001CF0D377480>
