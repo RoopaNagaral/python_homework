@@ -67,7 +67,8 @@ more_employees.info()
 
 # Task 4: Data Cleaning
 # 4.1: create dataframe from dirty_data.csv file
-path = os.path.join(os.getcwd(), 'dirty_data.csv')
+#path = os.path.join(os.getcwd(), "assignment4", 'dirty_data.csv')
+path = "assignment4/dirty_data.csv"
 dirty_data = pd.read_csv(path)
 print("\n Dirty data: \n", dirty_data)
 
@@ -101,8 +102,6 @@ print("\n Converted Hire Date: \n", clean_data)
 
 # 4.7: Strip extra whitespace and standardize Name and Department as uppercase
 clean_data["Name"] = clean_data["Name"].str.strip()
-clean_data["Name"] = clean_data["Name"].str.upper()
-
 clean_data["Department"] = clean_data["Department"].str.strip()
 clean_data["Department"] = clean_data["Department"].str.upper()
 print("\n Uppercase Name & Department: \n", clean_data)
