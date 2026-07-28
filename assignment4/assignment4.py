@@ -102,6 +102,7 @@ print("\n Converted Hire Date: \n", clean_data)
 
 # 4.7: Strip extra whitespace and standardize Name and Department as uppercase
 clean_data["Name"] = clean_data["Name"].str.strip()
+clean_data["Name"] = clean_data["Name"].str.upper()
 clean_data["Department"] = clean_data["Department"].str.strip()
 clean_data["Department"] = clean_data["Department"].str.upper()
 print("\n Uppercase Name & Department: \n", clean_data)
