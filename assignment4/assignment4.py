@@ -78,12 +78,12 @@ clean_data = clean_data.drop_duplicates()
 print("\n No duplicates: \n", clean_data)
 
 # 4.3: Convert Age to numeric and handle missing values
-clean_data["Age"] = clean_data["Age"].replace("NaN", pd.NA).fillna(0)
 clean_data["Age"] = pd.to_numeric(clean_data["Age"], errors="coerce")
 print("\n Numeric Age: \n", clean_data)
 
 # 4.4: Convert Salary to numeric and replace known placeholders (unknown, n/a) with NaN
-clean_data["Salary"] = clean_data["Salary"].replace("unknown, n/a", pd.NA)
+clean_data["Salary"] = clean_data["Salary"].replace("unknown", pd.NA)
+clean_data["Salary"] =clean_data["Salary"].replace("n/a", pd.NA)
 clean_data["Salary"] = pd.to_numeric(clean_data["Salary"], errors="coerce")
 print("\n Numeric Age: \n", clean_data)
 
@@ -102,6 +102,7 @@ print("\n Converted Hire Date: \n", clean_data)
 # 4.7: Strip extra whitespace and standardize Name and Department as uppercase
 clean_data["Name"] = clean_data["Name"].str.strip()
 clean_data["Name"] = clean_data["Name"].str.upper()
+
 clean_data["Department"] = clean_data["Department"].str.strip()
 clean_data["Department"] = clean_data["Department"].str.upper()
 print("\n Uppercase Name & Department: \n", clean_data)
