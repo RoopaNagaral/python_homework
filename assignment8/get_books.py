@@ -31,29 +31,25 @@ results = []
 print(f"Number of search results found: {len(book_list)}")
 
 for item in book_list:
-    title_h3 = item.find_element(By.CSS_SELECTOR, "span.title-content")
-    #print("Title", title_h3.text) 
-    title = title_h3.text.strip()
+    title_element = item.find_element(By.CSS_SELECTOR, "span.title-content")
+    book_title = title_element.text.strip()
     
-    author_a = item.find_element(By.CSS_SELECTOR, "a.author-link")
-    authors = author_a.text.strip().split(",")
+    author_elements = item.find_elements(By.CSS_SELECTOR, "a.author-link")
+    authors = [a.text.strip() for a in author_elements if a.text.strip()]
+    author_name = "; ".join(authors)
     
     format_div = item.find_element(By.CSS_SELECTOR, "div.cp-format-info")
-    format_span = format_div.find_element(By.CSS_SELECTOR, "span.display-info-primary")
+    format_span = format_div.find_element(By.TAG_NAME, "span")
     format_year = format_span.text.strip()
-    
-    if len(authors) > 1:
-        author_name = authors[0] + ';' + authors[1]
-        #print(author_name)
-    else:
-        author_name = authors[0].strip()
-        
-    results.append({"Title": title, "Author": author_name, "Format-Year": format_year})
+   
+    results.append({"Title": book_title, "Author": author_name, "Format-Year": format_year})
     
 book_df = pd.DataFrame(results)
 print("Books List:")
 print(book_df)
-    
+
+driver.quit()
+  
 #Task 4: Write out the Data
 #wrting book search results to csv file
 book_df.to_csv("assignment8/get_books.csv", index=False)
@@ -64,4 +60,3 @@ json_data = {"results": results}
 with open("assignment8/get_books.json", "w") as json_file:
     json.dump(json_data, json_file, indent=4)
  
-driver.quit()

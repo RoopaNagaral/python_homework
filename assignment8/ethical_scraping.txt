@@ -1,11 +1,13 @@
 #Task 5: Ethical Web Scraping
 1. Which sections of the website are restricted for crawling?
-- Spam blacklist pages such as /wiki/MediaWiki:Spam-blacklist and related talk pages.
-- Deletion-related pages including Articles for deletion, Votes for deletion, Pages for deletion, Miscellany for deletion, Categories for discussion, and their talk pages.
+Wikipedia restricts dynamic and internal sections such as /w/, /api/, /trap/, and versions of /wiki/Special:. 
+It also restricts many search, administrative, moderation, deletion, copyright, spam, arbitration, and discussion pages across its different language editions. 
+Some exceptions are explicitly allowed, including particular API documentation, mobile-view API requests, page loading, and sitemap paths.
 
 2. Are there specific rules for certain user agents?
-- Many bots are fully disallowed, including MJ12bot, Mediapartners-Google*, UbiCrawler, DOC, Zao, Zealbot, MSIECrawler, HTTrack, WebReaper, NPBot, wget, and others.
-- SemrushBot has a crawl-delay of 5 seconds.
+Yes. Many specifically named user agents, including MJ12bot, Mediapartners-Google, UbiCrawler, DOC, WebCopier, Fetch, HTTrack, and wget, are completely disallowed from crawling the website. 
+Wikipedia work bots such as IsraBot and Orthogaffe have empty Disallow rules, while SemrushBot is assigned a crawl delay of five seconds. 
+General rules under User-agent: * apply to crawlers that do not have their own specific section.
 
 3. Reflection:
 Websites use robots.txt to control how automated crawlers access their content, protecting sensitive or high-traffic areas from being overloaded. 
