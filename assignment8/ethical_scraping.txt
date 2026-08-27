@@ -1,0 +1,13 @@
+#Task 5: Ethical Web Scraping
+1. Which sections of the website are restricted for crawling?
+- Spam blacklist pages such as /wiki/MediaWiki:Spam-blacklist and related talk pages.
+- Deletion-related pages including Articles for deletion, Votes for deletion, Pages for deletion, Miscellany for deletion, Categories for discussion, and their talk pages.
+
+2. Are there specific rules for certain user agents?
+- Many bots are fully disallowed, including MJ12bot, Mediapartners-Google*, UbiCrawler, DOC, Zao, Zealbot, MSIECrawler, HTTrack, WebReaper, NPBot, wget, and others.
+- SemrushBot has a crawl-delay of 5 seconds.
+
+3. Reflection:
+Websites use robots.txt to control how automated crawlers access their content, protecting sensitive or high-traffic areas from being overloaded. 
+These rules help ensure that scraping is done responsibly and respectfully. 
+Robots.txt promotes ethical scraping by providing clear guidelines that crawlers should follow.
