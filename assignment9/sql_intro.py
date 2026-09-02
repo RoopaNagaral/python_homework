@@ -1,13 +1,20 @@
 import sqlite3
 
 # Task 1: Create a New SQLite Database
-with sqlite3.connect("db/magazines.db") as conn:
-    print("Database created and connected successfully.")
-    cursor = conn.cursor()
+try:
+    with sqlite3.connect("../db/magazines.db") as conn:
+        print("Database created and connected successfully.")
+        cursor = conn.cursor()
+except sqlite3.Error as e:
+    print(f"Database error: {e}")
+finally:
+    conn.commit()
     
     #Task 2: Define Database Structure
     
-    try:
+try:
+    with sqlite3.connect("../db/magazines.db") as conn:
+        cursor = conn.cursor()
         # create tables
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS publishers (
@@ -39,17 +46,17 @@ with sqlite3.connect("db/magazines.db") as conn:
             magazines_id INTEGER,
             subscriber_id INTEGER,
             expiration_date TEXT NOT NULL,
-            FOREIGN KEY (magazines_id) REFERENCES magazines (magazines_id)
+            FOREIGN KEY (magazines_id) REFERENCES magazines (magazines_id),
             FOREIGN KEY (subscriber_id) REFERENCES subscribers (subscriber_id)
         )
         """)
         
         print("Tables created successfully.")
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-    finally:
-        conn.commit()
-    
+except sqlite3.Error as e:
+    print(f"Database error: {e}")
+finally:       
+    conn.commit()
+       
     #Task 3: Populate Tables with Data
     
     def add_publishers(cursor, name):
@@ -62,11 +69,12 @@ with sqlite3.connect("db/magazines.db") as conn:
         try:
             cursor.execute("SELECT * FROM subscribers WHERE subscriber_name = ? AND address = ?", (name, address))
             results = cursor.fetchall()
-            if len(results) > 0:
+            if len(results) <= 0:
+                cursor.execute("INSERT INTO subscribers (subscriber_name, address) VALUES (?,?)", (name, address))
+            else:
                 print(f"The {name} and {address} of subcriber is alredy exists.")
                 return
-            else:
-                cursor.execute("INSERT INTO subscribers (subscriber_name, address) VALUES (?,?)", (name, address))
+                
         except sqlite3.IntegrityError:
             print(f"{name} is already in the database.")
     
@@ -102,11 +110,11 @@ with sqlite3.connect("db/magazines.db") as conn:
             cursor.execute("INSERT INTO subscriptions (magazines_id, subscriber_id, expiration_date) VALUES (?,?,?)", (magazines_id, subscriber_id, expirationDate))
         except sqlite3.IntegrityError as e:
             print(f"Database error: {e}")
-            
-with sqlite3.connect("db/magazines.db") as conn:
-    conn.execute("PRAGMA foreign_keys = 1") # This turns on the foreign key constraint
-    cursor = conn.cursor()
-    
+
+try:
+    with sqlite3.connect("../db/magazines.db") as conn:
+        conn.execute("PRAGMA foreign_keys = 1") # This turns on the foreign key constraint
+        cursor = conn.cursor()             
     # Insert sample data into tables
     
     add_publishers(cursor, 'The N2 Company')  
@@ -125,15 +133,15 @@ with sqlite3.connect("db/magazines.db") as conn:
     add_subscriptions(cursor, 'Greet','Dr. Smith','09/20/2026')
     add_subscriptions(cursor, 'Horticulture', 'Ms. Jones','09/25/2026')
     add_subscriptions(cursor, 'Allrecipes', 'Dr. Lee', '09/30/2026')
-    
-conn.commit() 
-# If you don't commit the transaction, it is rolled back at the end of the with statement, and the data is discarded.
-print("Sample data inserted successfully.")
-    
+except sqlite3.Error as e:
+    print(f"Database error: {e}")
+finally:
+    conn.commit()
+ 
 #Task 4: Write SQL Queries
-with sqlite3.connect("db/magazines.db") as conn:
-    cursor = conn.cursor()
-    
+try:
+    with sqlite3.connect("../db/magazines.db") as conn:
+        cursor = conn.cursor()
     # Retrieve all information from the subscribers table
     try:
         cursor.execute("SELECT * FROM subscribers")
@@ -164,4 +172,9 @@ with sqlite3.connect("db/magazines.db") as conn:
     except sqlite3.Error as e:
         print(f"Database error: {e}")
         
-conn.commit()
+except sqlite3.Error as e:
+    print(f"Database error: {e}")
+finally:
+    conn.commit()
+        
+
