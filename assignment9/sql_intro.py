@@ -10,8 +10,10 @@ def add_publishers(cursor, name):
             return publisher[0]
         
         cursor.execute("INSERT INTO publishers (publisher_name) VALUES (?)", (name,))
+        return cursor.lastrowid
     except sqlite3.Error as error:
         print(f"Error adding publisher {name} : {error}")
+        return None
             
 def add_subscribers(cursor, name, address):
     try:
@@ -23,11 +25,12 @@ def add_subscribers(cursor, name, address):
             return subscriber[0]
         
         cursor.execute("INSERT INTO subscribers (subscriber_name, address) VALUES (?,?)", (name, address))
-       
+        return cursor.lastrowid
     except sqlite3.Error as error:
         print(f"Error adding subscriber {name} : {error}")
+        return None
     
-def add_magazines(cursor, publisher, name):
+def add_magazines(cursor, publisher_id, name):
     try:
         cursor.execute("SELECT magazine_id FROM magazines WHERE magazine_name = ?",(name,))
         magazine = cursor.fetchone()
@@ -36,36 +39,14 @@ def add_magazines(cursor, publisher, name):
             print(f"Magazine already exists: {name}")
             return magazine[0]
         
-        cursor.execute("SELECT * FROM publishers WHERE publisher_name = ?", (publisher,)) # For a tuple with one element, you need to include the comma
-        results = cursor.fetchall()
-        if len(results) > 0:
-            publisher_id = results[0][0]
-        else:
-            print(f"There was no publisher named {publisher}.")
-            return
-        
         cursor.execute("INSERT INTO magazines (publisher_id, magazine_name) VALUES (?,?)", (publisher_id, name))
-        
+        return cursor.lastrowid
     except sqlite3.Error as error:
         print(f"Error adding magazine {name} : {error}")
+        return None
                 
-def add_subscriptions(cursor, magazines, subscriber, expirationDate):
+def add_subscriptions(cursor, magazine_id, subscriber_id, expirationDate):
     try:
-        cursor.execute("SELECT * FROM magazines WHERE magazine_name = ?", (magazines,)) # For a tuple with one element, you need to include the comma
-        results = cursor.fetchall()
-        if len(results) > 0:
-            magazine_id = results[0][0]
-        else:
-            print(f"There was no magazine named {magazines}.")
-            return
-        cursor.execute("SELECT * FROM subscribers WHERE subscriber_name = ?", (subscriber,)) # For a tuple with one element, you need to include the comma
-        results = cursor.fetchall()
-        if len(results) > 0:
-            subscriber_id = results[0][0]
-        else:
-            print(f"There was no subcriber named {subscriber}.")
-            return
-        
         cursor.execute("""SELECT subscription_id FROM subscriptions WHERE subscriber_id = ? AND magazine_id = ?""",
                     (subscriber_id, magazine_id)
                 )
@@ -76,8 +57,10 @@ def add_subscriptions(cursor, magazines, subscriber, expirationDate):
             return subscription[0]
                 
         cursor.execute("INSERT INTO subscriptions (magazine_id, subscriber_id, expiration_date) VALUES (?,?,?)", (magazine_id, subscriber_id, expirationDate))
+        
     except sqlite3.Error as error:
         print(f"Error adding subscription: {error}")
+        return None
             
 # Task 1: Create a New SQLite Database  
 conn = None
@@ -99,7 +82,7 @@ try:
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS magazines (
             magazine_id INTEGER PRIMARY KEY,
-            publisher_id INTEGER,
+            publisher_id INTEGER NOT NULL,
             magazine_name TEXT NOT NULL UNIQUE,
             FOREIGN KEY (publisher_id) REFERENCES publishers (publisher_id)
         )
@@ -123,28 +106,28 @@ try:
             FOREIGN KEY (subscriber_id) REFERENCES subscribers (subscriber_id)
         )
         """)
-        
-    print("Tables created successfully.")
+    
     #Task 3: Populate Tables with Data
 
-    # Insert sample data into tables
+    # Add at least three publishers
+    publisher_1 = add_publishers(cursor, 'The N2 Company')  
+    publisher_2 = add_publishers(cursor, 'Home Upgrades, Inc.')
+    publisher_3 = add_publishers(cursor, 'Style Creative Media LLC')
+   
+    # Add at least three subscribers
+    subscriber_1 = add_subscribers(cursor, 'Dr. Smith', '9151 Currency St, Irving, TX 75063')
+    subscriber_2 = add_subscribers(cursor, 'Ms. Jones', '3900 W Plano Pkwy, Plano, TX 75075')
+    subscriber_3 = add_subscribers(cursor, 'Dr. Lee', '15443 Knoll Trail Dr, Dallas, TX 75248')
     
-    add_publishers(cursor, 'The N2 Company')  
-    add_publishers(cursor, 'Home Upgrades, Inc.')
-    add_publishers(cursor, 'Style Creative Media LLC')
+    # Add at least three magazones
+    magazine_1 = add_magazines(cursor, publisher_1,'Greet')
+    magazine_2 = add_magazines(cursor, publisher_2,'Horticulture')
+    magazine_3 = add_magazines(cursor, publisher_3,'Allrecipes')
     
-    add_subscribers(cursor, 'Dr. Smith', '9151 Currency St, Irving, TX 75063')
-    add_subscribers(cursor, 'Ms. Jones', '3900 W Plano Pkwy, Plano, TX 75075')
-    #add_subscribers(cursor, 'Dr. Smith', '9151 Currency St, Irving, TX 75063')
-    add_subscribers(cursor, 'Dr. Lee', '15443 Knoll Trail Dr, Dallas, TX 75248')
-    
-    add_magazines(cursor,'The N2 Company','Greet')
-    add_magazines(cursor, 'Home Upgrades, Inc.','Horticulture')
-    add_magazines(cursor, 'Style Creative Media LLC','Allrecipes')
-    
-    add_subscriptions(cursor, 'Greet','Dr. Smith','09/20/2026')
-    add_subscriptions(cursor, 'Horticulture', 'Ms. Jones','09/25/2026')
-    add_subscriptions(cursor, 'Allrecipes', 'Dr. Lee', '09/30/2026')
+    # Add at least three subscriptions
+    add_subscriptions(cursor, magazine_1, subscriber_1,'09/20/2026')
+    add_subscriptions(cursor, magazine_2, subscriber_2,'09/25/2026')
+    add_subscriptions(cursor, magazine_3, subscriber_3, '09/30/2026')
     
     #Task 4: Write SQL Queries
     # Retrieve all information from the subscribers table
@@ -157,12 +140,13 @@ try:
     #retrieve all magazines sorted by name  
     cursor.execute("SELECT * FROM magazines ORDER BY magazine_name")
     result = cursor.fetchall()
-    print("\n Sorted by Magazines name: ")
+    print("\nMagazines sorted by name: ")
     for row in result:
         print(row)       
         
     #find magazines for a particular publisher
-    cursor.execute("SELECT m.magazine_name, p.publisher_name FROM magazines AS m JOIN publishers AS p ON m.publisher_id = p.publisher_id WHERE p.publisher_name = 'The N2 Company'")
+    publisher_name = 'The N2 Company'
+    cursor.execute("SELECT m.magazine_name, p.publisher_name FROM magazines AS m JOIN publishers AS p ON m.publisher_id = p.publisher_id WHERE p.publisher_name = ?",(publisher_name,))
     result = cursor.fetchall()
     print("\n Magazines published by particuler publisher ")
     for row in result:

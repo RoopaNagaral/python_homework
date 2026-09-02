@@ -15,7 +15,7 @@ with sqlite3.connect("../db/lesson.db") as conn:
     print(df.head())
     
     #group by product_id and different aggrigation
-    df = df.groupby('product_id').agg({
+    df = df.groupby('product_id', as_index=False).agg({
         'line_item_id' : 'count',
         'total' : 'sum',
         'product_name': 'first'})
