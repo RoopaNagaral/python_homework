@@ -65,7 +65,7 @@ def add_subscriptions(cursor, magazine_id, subscriber_id, expirationDate):
 # Task 1: Create a New SQLite Database  
 conn = None
 try:
-    conn = sqlite3.connect("../db/magazines.db")
+    conn = sqlite3.connect("db/magazines.db")
     conn.execute("PRAGMA foreign_keys = 1") # This turns on the foreign key constraint
     
     cursor = conn.cursor()
