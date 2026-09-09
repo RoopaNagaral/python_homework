@@ -37,7 +37,7 @@ try:
                     JOIN products AS p ON p.product_id = li.product_id
                     GROUP BY o.order_id, o.customer_id
         ) sub ON c.customer_id = sub.customer_id_b
-        GROUP BY customer_id
+        GROUP BY c.customer_id,c.customer_name
     """
     
     cursor.execute(query2)
@@ -55,14 +55,13 @@ try:
     cursor.execute("SELECT product_id FROM products ORDER BY price ASC LIMIT 5")
     productid = cursor.fetchall()
     
-    cursor.execute("INSERT INTO orders(customer_id, employee_id, date) VALUES(?,?,?) RETURNING order_id", (int(customerid[0]), int(empid[0]), '2026-09-09'))
+    cursor.execute("INSERT INTO orders(customer_id, employee_id, date) VALUES(?,?,date('now')) RETURNING order_id", (int(customerid[0]), int(empid[0])))
     orderid = cursor.fetchone()
     
     item_list = []
     for row in productid:
         product = int(row[0])
-        quantity = 5
-        cursor.execute("INSERT INTO line_items(order_id, product_id, quantity) VALUES(?,?,?)", (int(orderid[0]), product, 5))
+        cursor.execute("INSERT INTO line_items(order_id, product_id, quantity) VALUES(?,?,?)", (int(orderid[0]), product, 10))
 
         cursor.execute("""
                        SELECT li.line_item_id, p.product_name, li.quantity 
@@ -70,7 +69,6 @@ try:
                        WHERE li.order_id =? AND li.product_id =?
                        """,(int(orderid[0]), product,))
         item_list.append(cursor.fetchone())
-        quantity += 1
         
         cursor.execute("DELETE FROM line_items WHERE order_id =? AND product_id =?",(int(orderid[0]), product,))
         cursor.execute("""
@@ -90,10 +88,10 @@ try:
     
     #Task 4: Aggregation with HAVING
     having_query = """
-        SELECT e.employee_id, e.first_name, e.last_name, COUNT(e.employee_id)
+        SELECT e.employee_id, e.first_name, e.last_name, COUNT(o.order_id)
         FROM employees AS e JOIN orders AS o ON e.employee_id = o.employee_id
         GROUP BY e.employee_id
-        HAVING COUNT(e.employee_id) > 5
+        HAVING COUNT(o.order_id) > 5
     """
     cursor.execute(having_query)
     print("\nOrder of each employee:")
