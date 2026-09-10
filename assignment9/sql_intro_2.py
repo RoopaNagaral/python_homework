@@ -2,7 +2,7 @@ import pandas as pd
 import sqlite3
 
 #Task 5: Read Data into a DataFrame
-with sqlite3.connect("../db/lesson.db") as conn:
+with sqlite3.connect("db/lesson.db") as conn:
     sql_statement = """SELECT line_items.line_item_id, line_items.quantity, products.product_id, products.product_name, products.price 
                         FROM line_items JOIN products ON line_items.product_id = products.product_id;"""
     df = pd.read_sql_query(sql_statement, conn)
