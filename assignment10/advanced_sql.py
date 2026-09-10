@@ -97,7 +97,11 @@ try:
             f"Line item ID: {line_item_id}, "
             f"Quantity: {quantity}, Product: {product_name}"
         )
-          
+        
+    #SQL Commands to DELETE records
+    #DELETE FROM line_items WHERE order_id = <order_id> AND product_id = <product_id> 
+    #DELETE FROM orders WHERE order_id = <order_id>
+        
     #Task 4: Aggregation with HAVING
     having_query = """
         SELECT employees.employee_id,
@@ -118,7 +122,7 @@ try:
     for employee_id, first_name, last_name, order_count in cursor.fetchall():
         print(
             f"Employee ID: {employee_id}, "
-            f"Name: {first_name} {last_name}, Orders: {order_count}"
+            f"First Name: {first_name}, Last Name: {last_name}, Orders: {order_count}"
         )
     
 except sqlite3.Error as e:
