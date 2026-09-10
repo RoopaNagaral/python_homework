@@ -4,16 +4,15 @@ import os
 # Note, you need to create a 'db' directory if it isn't already in your workspace
 DB_PATH = "db/lesson.db"
 
-# Start fresh so results are predictable when re-running this script
-""" if os.path.exists(DB_PATH):
-    os.remove(DB_PATH) """
-conn = None
-try:
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+conn = sqlite3.connect(DB_PATH)
+cursor = conn.cursor()
     
-    cursor.execute("PRAGMA foreign_keys = 1;")
+conn.execute("PRAGMA foreign_keys = 1;")
 
+try:
+    
+    conn.execute("BEGIN")
+    
     #Task 1: Complex JOINs with Aggregation
         
     query = """
@@ -53,7 +52,7 @@ try:
         if average_total_price is None:
             print(f"{customer_name}: No order total available")
         else:
-            print(f"Customer Name:{customer_name}, Average Total Price:${average_total_price:.2f}")   
+            print(f"customer_name :{customer_name}, average_total_price:${average_total_price:.2f}")   
 
     #Task 3.1: An Insert Transaction Based on Data
     
@@ -104,9 +103,8 @@ try:
         )
         
     print("\nCleaning up test data...")
-    for product_id in products:
-        productid = int(product_id[0])
-        cursor.execute("DELETE FROM line_items WHERE order_id =? AND product_id =?",(order_id, productid,))
+    
+    cursor.execute("DELETE FROM line_items WHERE order_id =?",(order_id,))
             
     cursor.execute("DELETE FROM orders WHERE order_id=?", (order_id,))
     print("Cleanup complete. Test data removed.\n")
@@ -134,9 +132,9 @@ try:
             f"First Name: {first_name}, Last Name: {last_name}, Orders: {order_count}"
         )
     
-except sqlite3.Error as e:
-    print(f"Database error: {e}")
+    conn.commit()
+except Exception as e:
+    conn.rollback()
+    print("Transaction failed:", e)
 finally:
-    if conn is not None:
-        conn.close()
-        print("\nDatabase connection closed.") 
+    conn.close()
