@@ -20,12 +20,12 @@ try:
         FROM orders AS o JOIN line_items AS li ON o.order_id = li.order_id
         JOIN products AS p ON p.product_id = li.product_id
         GROUP BY o.order_id
-        ORDER BY o.order_id LIMIT 5
+        ORDER BY o.order_id 
+        LIMIT 5
         """
-        
     cursor.execute(query)
-    print("Total price of order: ")
-    print(cursor.fetchall())
+    for order_id, total_price in cursor.fetchall():
+        print(f"Order ID: {order_id}, Total price: ${total_price:.2f}")   
     
     #Task 2: Understanding Subqueries
     query2 = """
@@ -38,11 +38,14 @@ try:
                     GROUP BY o.order_id, o.customer_id
         ) sub ON c.customer_id = sub.customer_id_b
         GROUP BY c.customer_id,c.customer_name
+        ORDER BY c.customer_id
     """
     
-    cursor.execute(query2)
-    print("\nCustomer name and Avgerage total price of orders:")
-    print(cursor.fetchall())    
+    for customer_name, average_total_price in cursor.fetchall():
+        if average_total_price is None:
+            print(f"{customer_name}: No order total available")
+        else:
+            print(f"{customer_name}: ${average_total_price:.2f}")   
 
     #Task 3.1: An Insert Transaction Based on Data
     
@@ -76,15 +79,20 @@ try:
                               FROM line_items AS li JOIN products AS p ON li.product_id = p.product_id
                               WHERE li.order_id =? AND li.product_id =?
                               """,(int(orderid[0]), product,))
-        print("\n", cursor.fetchone())         
+        if cursor.fetchone() == None:
+                print("\nline item deleted")       
              
-    print("\nOrder Details of customer 'Perez and Sons':")
-    print(item_list) 
+    for line_item_id, quantity, product_name in item_list:
+        print(
+            f"Line item ID: {line_item_id}, "
+            f"Quantity: {quantity}, Product: {product_name}"
+        )
     
     cursor.execute("DELETE FROM orders WHERE order_id=?", (int(orderid[0]),))
     
     cursor.execute("SELECT * FROM orders WHERE order_id=?", (int(orderid[0]),))
-    print("\n", cursor.fetchone())
+    if cursor.fetchone() == None:
+        print("\norderds item deleted")
     
     #Task 4: Aggregation with HAVING
     having_query = """
@@ -93,9 +101,11 @@ try:
         GROUP BY e.employee_id
         HAVING COUNT(o.order_id) > 5
     """
-    cursor.execute(having_query)
-    print("\nOrder of each employee:")
-    print(cursor.fetchall())
+    for employee_id, first_name, last_name, order_count in cursor.fetchall():
+        print(
+            f"Employee ID: {employee_id}, "
+            f"Name: {first_name} {last_name}, Orders: {order_count}"
+        )
     
 except sqlite3.Error as e:
     print(f"Database error: {e}")
