@@ -40,12 +40,13 @@ try:
         GROUP BY c.customer_id,c.customer_name
         ORDER BY c.customer_id
     """
-    
+    cursor.execute(query2)
+    print("\nAverage total price of the customer order:")
     for customer_name, average_total_price in cursor.fetchall():
         if average_total_price is None:
             print(f"{customer_name}: No order total available")
         else:
-            print(f"{customer_name}: ${average_total_price:.2f}")   
+            print(f"Customer Name:{customer_name}, Average Total Price:${average_total_price:.2f}")   
 
     #Task 3.1: An Insert Transaction Based on Data
     
@@ -56,37 +57,40 @@ try:
     empid = cursor.fetchone()
     
     cursor.execute("SELECT product_id FROM products ORDER BY price ASC LIMIT 5")
-    productid = cursor.fetchall()
+    products = cursor.fetchall()
     
     cursor.execute("INSERT INTO orders(customer_id, employee_id, date) VALUES(?,?,date('now')) RETURNING order_id", (int(customerid[0]), int(empid[0])))
     orderid = cursor.fetchone()
     
     item_list = []
-    for row in productid:
-        product = int(row[0])
-        cursor.execute("INSERT INTO line_items(order_id, product_id, quantity) VALUES(?,?,?)", (int(orderid[0]), product, 10))
+    for row in products:
+        productid = int(row[0])
+        cursor.execute("INSERT INTO line_items(order_id, product_id, quantity) VALUES(?,?,?)", (int(orderid[0]), productid, 10))
 
         cursor.execute("""
-                       SELECT li.line_item_id, p.product_name, li.quantity 
+                       SELECT li.line_item_id, li.quantity, p.product_name
                        FROM line_items AS li JOIN products AS p ON li.product_id = p.product_id
                        WHERE li.order_id =? AND li.product_id =?
-                       """,(int(orderid[0]), product,))
-        item_list.append(cursor.fetchone())
+                       """,(int(orderid[0]), productid,))
+        item_list.append(cursor.fetchone())       
         
-        cursor.execute("DELETE FROM line_items WHERE order_id =? AND product_id =?",(int(orderid[0]), product,))
-        cursor.execute("""
-                              SELECT li.line_item_id, p.product_name, li.quantity 
-                              FROM line_items AS li JOIN products AS p ON li.product_id = p.product_id
-                              WHERE li.order_id =? AND li.product_id =?
-                              """,(int(orderid[0]), product,))
-        if cursor.fetchone() == None:
-                print("\nline item deleted")       
-             
+    print("\nProduct details:")         
     for line_item_id, quantity, product_name in item_list:
         print(
             f"Line item ID: {line_item_id}, "
             f"Quantity: {quantity}, Product: {product_name}"
         )
+    
+    for product_id in products:
+        productid = int(product_id[0])
+        cursor.execute("DELETE FROM line_items WHERE order_id =? AND product_id =?",(int(orderid[0]), productid,))
+        cursor.execute("""
+                        SELECT li.line_item_id, p.product_name, li.quantity 
+                        FROM line_items AS li JOIN products AS p ON li.product_id = p.product_id
+                        WHERE li.order_id =? AND li.product_id =?
+                        """,(int(orderid[0]), productid,))
+        if cursor.fetchone() == None:
+            print("\nline item deleted")
     
     cursor.execute("DELETE FROM orders WHERE order_id=?", (int(orderid[0]),))
     
@@ -94,6 +98,7 @@ try:
     if cursor.fetchone() == None:
         print("\norderds item deleted")
     
+            
     #Task 4: Aggregation with HAVING
     having_query = """
         SELECT e.employee_id, e.first_name, e.last_name, COUNT(o.order_id)
@@ -101,6 +106,8 @@ try:
         GROUP BY e.employee_id
         HAVING COUNT(o.order_id) > 5
     """
+    cursor.execute(having_query)
+    print("\nEmployee order details:")
     for employee_id, first_name, last_name, order_count in cursor.fetchall():
         print(
             f"Employee ID: {employee_id}, "
