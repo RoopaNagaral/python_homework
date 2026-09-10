@@ -57,22 +57,27 @@ try:
 
     #Task 3.1: An Insert Transaction Based on Data
     
+    # 1. Get customer_id
     cursor.execute("SELECT customer_id FROM customers WHERE customer_name = 'Perez and Sons'")
-    customerid = cursor.fetchone()
+    customerid = cursor.fetchone()[0]
     
+    # 2. Get employee_id
     cursor.execute("SELECT employee_id FROM employees WHERE first_name = 'Miranda' AND last_name = 'Harris'")
-    empid = cursor.fetchone()
+    empid = cursor.fetchone()[0]
     
+    # 3. Get 5 least expensive product_ids
     cursor.execute("SELECT product_id FROM products ORDER BY price ASC LIMIT 5")
     products = cursor.fetchall()
     
+    # 4. Insert order and capture order_id
     cursor.execute("""
                 INSERT INTO orders (customer_id, employee_id, date)
                 VALUES (?, ?, date('now'))
                 RETURNING order_id
-        """, (int(customerid[0]), int(empid[0])))
+        """, (customerid, empid))
     order_id = cursor.fetchall()[0][0]
 
+    # 5. Insert line items
     cursor.executemany("""
                 INSERT INTO line_items (order_id, product_id, quantity)
                 VALUES (?, ?, ?)
@@ -98,10 +103,14 @@ try:
             f"Quantity: {quantity}, Product: {product_name}"
         )
         
-    #SQL Commands to DELETE records
-    #DELETE FROM line_items WHERE order_id = <order_id> AND product_id = <product_id> 
-    #DELETE FROM orders WHERE order_id = <order_id>
-        
+    print("\nCleaning up test data...")
+    for product_id in products:
+        productid = int(product_id[0])
+        cursor.execute("DELETE FROM line_items WHERE order_id =? AND product_id =?",(order_id, productid,))
+            
+    cursor.execute("DELETE FROM orders WHERE order_id=?", (order_id,))
+    print("Cleanup complete. Test data removed.\n")
+    
     #Task 4: Aggregation with HAVING
     having_query = """
         SELECT employees.employee_id,
