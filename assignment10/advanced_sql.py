@@ -11,8 +11,6 @@ conn.execute("PRAGMA foreign_keys = 1;")
 
 try:
     
-    conn.execute("BEGIN")
-    
     #Task 1: Complex JOINs with Aggregation
         
     query = """
@@ -29,12 +27,12 @@ try:
     
     #Task 2: Understanding Subqueries
     query2 = """
-        SELECT customers.customer_name,
-                   AVG(order_totals.total_price) AS average_total_price
+        SELECT customer_name,
+                   AVG(total_price) AS average_total_price
             FROM customers
             LEFT JOIN (
-                SELECT orders.customer_id AS customer_id_b,
-                       SUM(products.price * line_items.quantity) AS total_price
+                SELECT customer_id AS customer_id_b,
+                       SUM(price * quantity) AS total_price
                 FROM orders
                 JOIN line_items
                     ON orders.order_id = line_items.order_id
@@ -42,9 +40,9 @@ try:
                     ON line_items.product_id = products.product_id
                 GROUP BY orders.order_id, orders.customer_id
             ) AS order_totals
-                ON customers.customer_id = order_totals.customer_id_b
-            GROUP BY customers.customer_id, customers.customer_name
-            ORDER BY customers.customer_id;
+                ON customer_id = customer_id_b
+            GROUP BY customer_id, customer_name
+            ORDER BY customer_id;
     """
     cursor.execute(query2)
     print("\nAverage total price of the customer order:")
@@ -55,35 +53,36 @@ try:
             print(f"customer_name :{customer_name}, average_total_price:${average_total_price:.2f}")   
 
     #Task 3.1: An Insert Transaction Based on Data
-    
-    # 1. Get customer_id
-    cursor.execute("SELECT customer_id FROM customers WHERE customer_name = 'Perez and Sons'")
-    customerid = cursor.fetchone()[0]
-    
-    # 2. Get employee_id
-    cursor.execute("SELECT employee_id FROM employees WHERE first_name = 'Miranda' AND last_name = 'Harris'")
-    empid = cursor.fetchone()[0]
-    
-    # 3. Get 5 least expensive product_ids
-    cursor.execute("SELECT product_id FROM products ORDER BY price ASC LIMIT 5")
-    products = cursor.fetchall()
-    
-    # 4. Insert order and capture order_id
-    cursor.execute("""
-                INSERT INTO orders (customer_id, employee_id, date)
-                VALUES (?, ?, date('now'))
-                RETURNING order_id
-        """, (customerid, empid))
-    order_id = cursor.fetchall()[0][0]
+    with conn:
+        conn.execute("BEGIN")
+        # 1. Get customer_id
+        cursor.execute("SELECT customer_id FROM customers WHERE customer_name = 'Perez and Sons'")
+        customerid = cursor.fetchone()[0]
+        
+        # 2. Get employee_id
+        cursor.execute("SELECT employee_id FROM employees WHERE first_name = 'Miranda' AND last_name = 'Harris'")
+        empid = cursor.fetchone()[0]
+        
+        # 3. Get 5 least expensive product_ids
+        cursor.execute("SELECT product_id FROM products ORDER BY price ASC LIMIT 5")
+        products = cursor.fetchall()
+        
+        # 4. Insert order and capture order_id
+        cursor.execute("""
+                    INSERT INTO orders (customer_id, employee_id, date)
+                    VALUES (?, ?, date('now'))
+                    RETURNING order_id
+            """, (customerid, empid))
+        order_id = cursor.fetchone()[0]
 
-    # 5. Insert line items
-    cursor.executemany("""
-                INSERT INTO line_items (order_id, product_id, quantity)
-                VALUES (?, ?, ?)
-            """, [(order_id, product_id, 10)
-        for (product_id,) in products])
+        # 5. Insert line items
+        cursor.executemany("""
+                    INSERT INTO line_items (order_id, product_id, quantity)
+                    VALUES (?, ?, ?)
+                """, [(order_id, product_id, 10)
+            for (product_id,) in products])
 
-    print(f"\nTask 3: Line items for new order {order_id}")
+        print(f"\nTask 3: Line items for new order {order_id}")
 
     cursor.execute("""
             SELECT line_items.line_item_id,
@@ -95,6 +94,7 @@ try:
             WHERE line_items.order_id = ?
             ORDER BY line_items.line_item_id
         """, (order_id,))
+    
     print("\nProduct details:")
     for line_item_id, quantity, product_name in cursor.fetchall():
         print(
@@ -128,8 +128,8 @@ try:
     print("\nEmployee order details:")
     for employee_id, first_name, last_name, order_count in cursor.fetchall():
         print(
-            f"Employee ID: {employee_id}, "
-            f"First Name: {first_name}, Last Name: {last_name}, Orders: {order_count}"
+            f"employee_id: {employee_id}, "
+            f"first_name: {first_name}, last_name: {last_name}, order_count: {order_count}"
         )
     
     conn.commit()
