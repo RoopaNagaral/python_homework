@@ -32,17 +32,16 @@ try:
             FROM customers
             LEFT JOIN (
                 SELECT customer_id AS customer_id_b,
-                       SUM(price * quantity) AS total_price
+                       SUM(products.price * line_items.quantity) AS total_price
                 FROM orders
                 JOIN line_items
                     ON orders.order_id = line_items.order_id
                 JOIN products
                     ON line_items.product_id = products.product_id
-                GROUP BY orders.order_id, orders.customer_id
+                GROUP BY orders.order_id
             ) AS order_totals
                 ON customer_id = customer_id_b
-            GROUP BY customer_id, customer_name
-            ORDER BY customer_id;
+            GROUP BY customer_id
     """
     cursor.execute(query2)
     print("\nAverage total price of the customer order:")
@@ -101,13 +100,6 @@ try:
             f"Line item ID: {line_item_id}, "
             f"Quantity: {quantity}, Product: {product_name}"
         )
-        
-    print("\nCleaning up test data...")
-    
-    cursor.execute("DELETE FROM line_items WHERE order_id =?",(order_id,))
-            
-    cursor.execute("DELETE FROM orders WHERE order_id=?", (order_id,))
-    print("Cleanup complete. Test data removed.\n")
     
     #Task 4: Aggregation with HAVING
     having_query = """
@@ -118,11 +110,8 @@ try:
             FROM employees
             JOIN orders
                 ON employees.employee_id = orders.employee_id
-            GROUP BY employees.employee_id,
-                     employees.first_name,
-                     employees.last_name
+            GROUP BY employees.employee_id
             HAVING COUNT(orders.order_id) > 5
-            ORDER BY employees.employee_id;
     """
     cursor.execute(having_query)
     print("\nEmployee order details:")
